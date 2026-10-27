@@ -1,0 +1,4 @@
+---
+- name: Configure Ubuntu using a role
+  ansible.builtin.import_playbook: 03-role.yml
+

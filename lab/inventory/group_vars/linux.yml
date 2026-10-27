@@ -1,0 +1,5 @@
+---
+ansible_connection: ssh
+ansible_user: lab_automation
+ansible_python_interpreter: /usr/bin/python3
+

@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="{{ lab_language | e }}">
+  <head><meta charset="utf-8"><title>Ansible lab</title></head>
+  <body>
+    <h1>{{ lab_message | e }}</h1>
+    <p>Environment: {{ lab_environment | e }}</p>
+    <p>Host: {{ inventory_hostname | e }}</p>
+  </body>
+</html>
+

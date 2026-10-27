@@ -1,0 +1,20 @@
+---
+- name: Gather facts and observe conditions
+  hosts: linux
+  gather_facts: true
+  tasks:
+    - name: Show the gathered distribution
+      ansible.builtin.debug:
+        var: ansible_facts['distribution']
+
+    - name: Message for Ubuntu
+      ansible.builtin.debug:
+        msg: "This host uses Ubuntu"
+      when:
+        - ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Message for another distribution
+      ansible.builtin.debug:
+        msg: "This host uses another distribution"
+      when:
+        - ansible_facts['distribution'] != 'Ubuntu'

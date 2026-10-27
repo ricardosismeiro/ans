@@ -1,0 +1,39 @@
+---
+- name: Ensure Nginx is installed
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create the website directory
+  ansible.builtin.file:
+    path: /var/www/ansible-lab
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Render the role webpage
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/ansible-lab/index.html
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Render the role website configuration
+  ansible.builtin.template:
+    src: nginx-lab.conf.j2
+    dest: /etc/nginx/conf.d/ansible-lab.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Validate and reload Nginx from the role
+
+- name: Ensure the service is running
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+

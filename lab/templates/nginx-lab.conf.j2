@@ -1,0 +1,8 @@
+# Ansible lab configuration
+server {
+    listen {{ lab_web_port }};
+    server_name _;
+    root /var/www/ansible-lab;
+    index index.html;
+}
+

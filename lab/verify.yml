@@ -1,0 +1,22 @@
+---
+- name: Verify the Ubuntu website HTTP response
+  hosts: linux
+  gather_facts: false
+  vars_files:
+    - vars/lab.yml
+  tasks:
+    - name: Request the website from the managed node itself
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ lab_web_port }}/"
+        return_content: true
+        status_code: 200
+      register: lab_http_result
+
+    - name: Check the environment and message in the response
+      ansible.builtin.assert:
+        that:
+          - (lab_environment | e) in lab_http_result.content
+          - (lab_message | e) in lab_http_result.content
+        success_msg: "The website returned the expected environment and message."
+
+

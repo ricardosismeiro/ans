@@ -1,0 +1,42 @@
+---
+# Run only on the isolated course VMs.
+# File cleanup does not restore packages or the previous service state.
+- name: Remove course files on Ubuntu
+  hosts: linux
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Remove the lab website configuration
+      ansible.builtin.file:
+        path: /etc/nginx/conf.d/ansible-lab.conf
+        state: absent
+      notify: Validate and reload Nginx after cleanup
+
+    - name: Remove the website directory
+      ansible.builtin.file:
+        path: /var/www/ansible-lab
+        state: absent
+
+    - name: Remove the first session file
+      ansible.builtin.file:
+        path: /var/www/html/ansible-lab.txt
+        state: absent
+
+    - name: Remove the file added in the student exercise
+      ansible.builtin.file:
+        path: /var/www/html/team-lab.txt
+        state: absent
+
+  handlers:
+    - name: Validate Nginx after cleanup
+      ansible.builtin.command:
+        cmd: nginx -t
+      changed_when: false
+      listen: Validate and reload Nginx after cleanup
+
+    - name: Reload Nginx after cleanup
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      listen: Validate and reload Nginx after cleanup
+

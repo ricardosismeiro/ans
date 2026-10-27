@@ -1,0 +1,6 @@
+---
+lab_environment: training
+lab_message: "Configuration managed by Ansible"
+lab_web_port: 8080
+lab_language: en
+

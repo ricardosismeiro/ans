@@ -1,0 +1,30 @@
+---
+# Local template demonstration without remote access or software installation.
+- name: Demonstrate desired state and templates on the controller
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    lab_local_dir: "{{ playbook_dir }}/.ansible/local-demo"
+    lab_environment: training
+    lab_message: "Configuration managed by Ansible"
+    lab_language: en
+  tasks:
+    - name: Create the local directory
+      ansible.builtin.file:
+        path: "{{ lab_local_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Render the local webpage
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: "{{ lab_local_dir }}/index.html"
+        mode: "0644"
+      notify: Explain the change
+
+  handlers:
+    - name: Explain the change
+      ansible.builtin.debug:
+        msg: "The template changed and notified the handler."
+

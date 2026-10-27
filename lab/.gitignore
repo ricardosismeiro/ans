@@ -1,0 +1,5 @@
+.venv/
+.ansible/
+inventory/group_vars/linux/vault.yml
+evidence/
+

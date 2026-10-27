@@ -1,0 +1,11 @@
+---
+- name: Clean up local demonstration files only
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Remove the demonstration directory
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/.ansible/local-demo"
+        state: absent
+

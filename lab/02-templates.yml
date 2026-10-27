@@ -1,0 +1,59 @@
+---
+- name: Configure a lab website using templates
+  hosts: linux
+  become: true
+  gather_facts: true
+  vars_files:
+    - vars/lab.yml
+  tasks:
+    - name: Ensure Nginx is installed
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Create the website directory
+      ansible.builtin.file:
+        path: /var/www/ansible-lab
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Render the HTML content
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /var/www/ansible-lab/index.html
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Render the website configuration
+      ansible.builtin.template:
+        src: templates/nginx-lab.conf.j2
+        dest: /etc/nginx/conf.d/ansible-lab.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Validate and reload Nginx
+
+    - name: Ensure the service is running
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Validate the full Nginx configuration
+      ansible.builtin.command:
+        cmd: nginx -t
+      changed_when: false
+      listen: Validate and reload Nginx
+
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      listen: Validate and reload Nginx
+

@@ -1,0 +1,10 @@
+---
+- name: Reuse the Ubuntu website role
+  hosts: linux
+  become: true
+  gather_facts: true
+  vars_files:
+    - vars/lab.yml
+  roles:
+    - role: web_lab
+
